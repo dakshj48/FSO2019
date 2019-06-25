@@ -35,8 +35,8 @@ const Total = (props) => {
   let arr = props.arr.exercises
   return (
     <div>
-		  <p>
-		    Number of exercises {arr[0] + arr[1] + arr[2]}
+      <p>
+	Number of exercises {arr[0] + arr[1] + arr[2]}
       </p>
     </div>
   )
@@ -60,7 +60,7 @@ const App = () => {
     <div>
       <Header course={course} />
       <Content arr={content} />
-			<Total arr={content} />
+      <Total arr={content} />
     </div>
   )
 }
