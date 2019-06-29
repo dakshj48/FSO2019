@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 const List = ({people, term}) => {
   const listHelper = (arr) => arr.map(person => 

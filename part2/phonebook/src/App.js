@@ -41,7 +41,8 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter newTerm={newTerm} handleTermChange={handleTermChange} />
-      <Form addPerson={addPerson} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} newName={newName} newNumber={newNumber} />
+      <Form addPerson={addPerson} handleNameChange={handleNameChange} 
+            handleNumberChange={handleNumberChange} newName={newName} newNumber={newNumber} />
       <h2>Numbers</h2>
       <List people={persons} term={newTerm} />
     </div>
