@@ -1,8 +1,9 @@
 {
-  "name": "phonebook",
+  "name": "data_for_countries",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "apixu": "github:apixu/apixu-nodejs#master",
     "axios": "^0.19.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

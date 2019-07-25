@@ -1,9 +1,9 @@
 import React from 'react'
 
-const List = ({people, term}) => {
+const List = ({people, term, deletePerson}) => {
   const listHelper = (arr) => arr.map(person => 
     <div key={person.name}>
-      {person.name} {person.number}
+      {person.name} {person.number} <button onClick={() => deletePerson(person.name, person.id)}>delete</button>
     </div>
   )
 
