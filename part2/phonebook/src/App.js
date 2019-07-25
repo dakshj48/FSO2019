@@ -1,31 +1,86 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import List from './List'
 import Filter from './Filter'
 import Form from './Form'
+import Notification from './Notification'
+import { getAll, create, deleteID, update } from './Server'
+
+//  code to start the backend server:
+//          npx json-server --port 3001 --watch db.json 
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ])
-  const [ newName, setNewName ] = useState('')
+  const [ persons, setPersons] = useState([])
+  const [ newName, setNewName] = useState('')
   const [ newNumber, setNewNumber] = useState('')
   const [ newTerm, setNewTerm] = useState('')
+  const [ newMessage, setNewMessage] = useState([])
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.map(person => person.name).includes(newName))
-      window.alert(`${newName} is already added to phonebook`)
+    if (persons.map(person => person.name).includes(newName)) {
+      const result = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+      if (result) {
+        updatePerson(newName, newNumber)
+      }
+    }
     else {
       const personObject = {
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(personObject))
+      create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewMessage(
+            [`Added ${newName}`, 'success']
+          )
+            setTimeout(() => {
+              setNewMessage(null)
+            }, 5000)
+          setNewName('')
+          setNewNumber('')
+        })
     }
-    setNewName('')
-    setNewNumber('')
+  }
+  const deletePerson = (name, id) => {
+    const answer = window.confirm(`Delete ${name} ?`)
+    if (answer) {
+      deleteID(id)
+        .then(response => {
+          if(response.status !== 'error') {
+            setPersons(persons.filter(person => person.id !== id))
+          }
+        })
+    }
+  }
+  const updatePerson = (name, number) => {
+    const ind = persons.findIndex(person => person.name === name)
+    if (ind > -1) {
+      update(persons[ind].id, {name: name, number: number})
+        .then(response => {
+          if(response.status === 200) {
+            const ind = persons.findIndex(person => person.name === newName)
+            const arr = persons
+            arr[ind] = {...persons[ind], number: newNumber}
+            setPersons(arr)
+            setNewMessage(
+              [`Updated the number for ${name}`, 'success']
+            )
+            setTimeout(() => {
+              setNewMessage(null)
+            }, 5000)
+            setNewName('')
+            setNewNumber('')
+          }
+        })
+        .catch(error => {
+          setNewMessage(
+            [`Information of ${name} has already been removed from server`, 'error']
+          )
+          setTimeout(() => {
+            setNewMessage(null)
+          }, 5000)
+        })
+    }
   }
   const handleNameChange = (event) => {
     setNewName(event.target.value)
@@ -37,14 +92,22 @@ const App = () => {
     setNewTerm(event.target.value)
   }
 
+  useEffect(() => {
+    getAll()
+      .then(response => {
+        setPersons(response.data)
+      })
+  }, [])
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={newMessage} />
       <Filter newTerm={newTerm} handleTermChange={handleTermChange} />
       <Form addPerson={addPerson} handleNameChange={handleNameChange} 
             handleNumberChange={handleNumberChange} newName={newName} newNumber={newNumber} />
       <h2>Numbers</h2>
-      <List people={persons} term={newTerm} />
+      <List people={persons} term={newTerm} deletePerson={deletePerson}/>
     </div>
   )
 }
