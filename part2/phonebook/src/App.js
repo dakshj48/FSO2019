@@ -5,9 +5,6 @@ import Form from './Form'
 import Notification from './Notification'
 import { getAll, create, deleteID, update } from './Server'
 
-//  code to start the backend server:
-//          npx json-server --port 3001 --watch db.json 
-
 const App = () => {
   const [ persons, setPersons] = useState([])
   const [ newName, setNewName] = useState('')
