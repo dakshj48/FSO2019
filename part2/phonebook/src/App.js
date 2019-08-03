@@ -36,6 +36,14 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
+        .catch(error => {
+          setNewMessage(
+            [error.response.data.error, 'error']
+          )
+          setTimeout(() => {
+            setNewMessage(null)
+          }, 5000)
+        })
     }
   }
   const deletePerson = (name, id) => {
@@ -70,12 +78,22 @@ const App = () => {
           }
         })
         .catch(error => {
-          setNewMessage(
-            [`Information of ${name} has already been removed from server`, 'error']
-          )
-          setTimeout(() => {
-            setNewMessage(null)
-          }, 5000)
+          if (error.response.data.error.includes('minimum length')) {
+            setNewMessage(
+              [error.response.data.error, 'error']
+            )
+            setTimeout(() => {
+              setNewMessage(null)
+            }, 5000)  
+          }
+          else {
+            setNewMessage(
+              [`Information of ${name} has already been removed from server`, 'error']
+            )
+            setTimeout(() => {
+              setNewMessage(null)
+            }, 5000)
+          }
         })
     }
   }
