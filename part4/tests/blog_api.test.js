@@ -1,8 +1,15 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const Blog = require('../models/blog')
 
 const api = supertest(app)
+
+beforeEach(async () => {
+  await Blog.deleteMany({})
+  const blog = new Blog({ title: 'Test', author: 'Daksh Jain', url: 'daksh.me/test', likes: 1 })
+  await blog.save()
+})
 
 test('correct number of blogs are returned', async () => {
   const res = await api.get('/api/blogs')
