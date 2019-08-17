@@ -26,9 +26,9 @@ blogsRouter.post('/', async (request, response) => {
       blog = new Blog({ ...request.body, likes: 0 })
     }
     else {
-      user = await User.findOne({ username: 'root' })
       blog = new Blog({ ...request.body, user: user._id })
     }
+    user = await User.findOne({ username: 'root' })
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
