@@ -1,4 +1,5 @@
 import React from 'react'
+import Notification from './Notifications'
 
 const printBlog = (blog) => (
   <div key={blog.id}>
@@ -6,11 +7,12 @@ const printBlog = (blog) => (
   </div>
 )
 
-const Blog = ({ blogs, user, title, author, url, setTitle, setAuthor, setUrl, handleLogout, handleNewBlog}) => (
+const Blog = ({ blogs, user, title, author, url, setTitle, setAuthor, setUrl, handleLogout, handleNewBlog, notification }) => (
   <div>
       <h1>
         blogs
       </h1>
+      <Notification message={notification} />
       <p>
         {user.username} logged in
         <button type='submit' onClick={() => handleLogout()}>logout</button>

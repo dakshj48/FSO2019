@@ -6,8 +6,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
- // const [newBlog, setNewBlog] = useState('')
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [notification, setNotification] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -35,13 +34,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      console.log('logging in with', username, password)
     } catch (error) {
-      setErrorMessage('Wrong Credentials')
-      console.log('Wrong Credentials')
-      console.log(error)
+      setNotification(['wrong username or password', 'error'])
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification([])
       }, 5000)
     }
   }
@@ -51,16 +47,19 @@ const App = () => {
     try {
       const newBlog = await blogService.create({ "title": title, "author": author, "url": url })
       setBlogs(blogs.concat(newBlog))
+      setNotification([`${title} by ${author} added`, 'success'])
+      setTimeout(() => {
+        setNotification([])
+      }, 5000)
       setTitle('')
       setAuthor('')
       setUrl('')
     }
     catch (error) {
-      setErrorMessage('Failed to save the blog')
+      setNotification(['Failed to save the blog', 'error'])
       console.log('Failed to save the blog')
-      console.log(error)
       setTimeout(() => {
-        setErrorMessage(null)
+        setNotification([])
       }, 5000)
     }
   }
@@ -74,13 +73,13 @@ const App = () => {
     <div>
       {user === null && 
         <Login handleLogin={handleLogin} username={username} password={password} 
-          setUsername={setUsername} setPassword={setPassword}
+          setUsername={setUsername} setPassword={setPassword} notification={notification}
         />
       }
       {user !== null &&
         <Blog blogs={blogs} user={user} title={title} author={author} url={url}
           setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl} 
-          handleLogout={handleLogout} handleNewBlog={handleNewBlog}
+          handleLogout={handleLogout} handleNewBlog={handleNewBlog} notification={notification}
         />
       }
     </div>
