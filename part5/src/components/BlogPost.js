@@ -61,7 +61,7 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
       <div style={showWhenVisible}>
         {blog.url} <br />
         {blog.likes} likes <button onClick={handleLikes}>like</button> <br />
-        added by {blog.author} <br />
+        added by {blog.user.username || user.username} <br />
         <div style={showIfUser}>
           <button onClick={handleRemove}>remove</button>
         </div>
