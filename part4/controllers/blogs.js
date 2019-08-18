@@ -18,7 +18,6 @@ blogsRouter.post('/', async (request, response) => {
     }
 
     let blog = {}
-    //let user = await User.findOne({ username: 'root' })
     let user = await User.findOne({ username: request.user })
     if (!body.title && !body.url) {
       return response.status(400).end()
