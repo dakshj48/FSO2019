@@ -1,7 +1,10 @@
 import React from 'react'
 import Notification from './Notifications'
 
-const Login = ({ handleLogin, username, password, setUsername, setPassword, notification }) => (
+const Login = ({ 
+    handleLogin, username, password, 
+    setUsername, setPassword, notification 
+  }) => (
   <div>
     <h1>
       log in to application

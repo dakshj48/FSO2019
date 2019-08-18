@@ -1,13 +1,13 @@
 import React from 'react'
 import Notification from './Notifications'
+import Togglable from './Togglable'
+import BlogForm from './BlogForm'
+import BlogPost from './BlogPost'
 
-const printBlog = (blog) => (
-  <div key={blog.id}>
-    {blog.title} {blog.author}
-  </div>
-)
-
-const Blog = ({ blogs, user, title, author, url, setTitle, setAuthor, setUrl, handleLogout, handleNewBlog, notification }) => (
+const Blog = ({ 
+    blogs, user, title, author, url, setBlogs, setTitle, 
+    setAuthor, setUrl, handleLogout, handleNewBlog, notification 
+  }) => (
   <div>
       <h1>
         blogs
@@ -17,31 +17,15 @@ const Blog = ({ blogs, user, title, author, url, setTitle, setAuthor, setUrl, ha
         {user.username} logged in
         <button type='submit' onClick={() => handleLogout()}>logout</button>
       </p>
-      <h1>
-        create new
-      </h1>
-      <form onSubmit={handleNewBlog}> 
-        <div>
-          title:
-            <input type='text' value={title} name='Title'
-              onChange={({ target }) => setTitle(target.value)}
-            />
-        </div>
-        <div>
-          author:
-            <input type='text' value={author} name='Author'
-              onChange={({ target }) => setAuthor(target.value)}
-            />
-        </div>
-        <div>
-          url:
-            <input type='text' value={url} name='Url'
-              onChange={({ target }) => setUrl(target.value)}
-            />
-        </div>
-        <button type='submit'>create</button>
-      </form>
-      {blogs.map(blog => printBlog(blog))}
+      <Togglable buttonLabel='new blog'>
+        <BlogForm title={title} author={author} url={url}
+          setTitle={setTitle} setAuthor={setAuthor} 
+          setUrl={setUrl} handleNewBlog={handleNewBlog}
+        />
+      </Togglable>
+      {blogs.map(blog => 
+        <BlogPost key={blog.id} blog={blog} blogs={blogs} user={user} setBlogs={setBlogs}/>
+      )}
     </div>
 )
 

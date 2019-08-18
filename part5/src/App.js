@@ -17,6 +17,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll().then(initialBlogs => {
+        initialBlogs.sort((a,b) => b.likes - a.likes)
         setBlogs(initialBlogs)
       })
   }, [])
@@ -31,6 +32,7 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
+      blogService.setUser(user.username)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -46,6 +48,7 @@ const App = () => {
     event.preventDefault()
     try {
       const newBlog = await blogService.create({ "title": title, "author": author, "url": url })
+      console.log(user.username, newBlog.user.username, newBlog)
       setBlogs(blogs.concat(newBlog))
       setNotification([`${title} by ${author} added`, 'success'])
       setTimeout(() => {
@@ -78,7 +81,7 @@ const App = () => {
       }
       {user !== null &&
         <Blog blogs={blogs} user={user} title={title} author={author} url={url}
-          setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl} 
+          setBlogs={setBlogs} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl} 
           handleLogout={handleLogout} handleNewBlog={handleNewBlog} notification={notification}
         />
       }
