@@ -45,7 +45,8 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
         newBlogs.splice(index, 1)
         setBlogs(newBlogs)
       }
-      catch {
+      catch (error) {
+        console.log(error)
         console.log('Failed to remove the blog')
       }
     }

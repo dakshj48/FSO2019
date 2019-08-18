@@ -48,7 +48,6 @@ const App = () => {
     event.preventDefault()
     try {
       const newBlog = await blogService.create({ "title": title, "author": author, "url": url })
-      console.log(user.username, newBlog.user.username, newBlog)
       setBlogs(blogs.concat(newBlog))
       setNotification([`${title} by ${author} added`, 'success'])
       setTimeout(() => {
