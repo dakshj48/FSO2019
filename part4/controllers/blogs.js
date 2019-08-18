@@ -18,17 +18,17 @@ blogsRouter.post('/', async (request, response) => {
     }
 
     let blog = {}
-    let user = {}
+    //let user = await User.findOne({ username: 'root' })
+    let user = await User.findOne({ username: request.user })
     if (!body.title && !body.url) {
       return response.status(400).end()
     }
     if (!body.likes) {
-      blog = new Blog({ ...request.body, likes: 0 })
+      blog = new Blog({ ...request.body, likes: 0, user: user._id })
     }
     else {
       blog = new Blog({ ...request.body, user: user._id })
     }
-    user = await User.findOne({ username: 'root' })
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
