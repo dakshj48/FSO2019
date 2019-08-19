@@ -17,6 +17,7 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
   const showWhenVisible = { display: visible ? '' : 'none' }
 
   const showIfUser = { display: (user.username === blog.user.username || user.id === blog.user) ? '' : 'none' }
+
   const handleLikes = async (event) => {
     event.preventDefault()
     try {
