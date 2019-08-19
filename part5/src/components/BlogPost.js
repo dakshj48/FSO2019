@@ -13,16 +13,15 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
   const [visible, setVisible] = useState(false)
 
   const toggleVisibility = () => setVisible(!visible)
-  
-  const showWhenVisible = {display: visible ? '' : 'none'}
 
-  const showIfUser = {display: (user.username === blog.user.username || typeof blog.user === "string") ? '' : 'none'}
+  const showWhenVisible = { display: visible ? '' : 'none' }
 
+  const showIfUser = { display: (user.username === blog.user.username || user.id === blog.user) ? '' : 'none' }
   const handleLikes = async (event) => {
     event.preventDefault()
     try {
-      const newBlog = { ...blog, likes: blog.likes+1}
-      const res = await blogService.update(blog.id, newBlog)
+      const newBlog = { ...blog, likes: blog.likes+1 }
+      await blogService.update(blog.id, newBlog)
       let newBlogs = [...blogs]
       const index = newBlogs.findIndex(obj => obj.id === blog.id)
       newBlogs[index].likes++
@@ -39,7 +38,7 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
     event.preventDefault()
     if(window.confirm(`remove blog ${blog.title} by ${blog.author}?`)) {
       try {
-        const res = await blogService.deleteBlog(blog.id)
+        await blogService.deleteBlog(blog.id)
         let newBlogs = [...blogs]
         const index = newBlogs.findIndex(obj => obj.id === blog.id)
         newBlogs.splice(index, 1)
@@ -56,7 +55,7 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
     <div style={blogStyle}>
       <span onClick={toggleVisibility}>
         {blog.title} {' '}
-      </span> 
+      </span>
       {blog.author}
       <div style={showWhenVisible}>
         {blog.url} <br />

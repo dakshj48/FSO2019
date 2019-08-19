@@ -10,9 +10,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService
@@ -32,7 +32,6 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      blogService.setUser(user.username)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -47,7 +46,7 @@ const App = () => {
   const handleNewBlog = async (event) => {
     event.preventDefault()
     try {
-      const newBlog = await blogService.create({ "title": title, "author": author, "url": url })
+      const newBlog = await blogService.create({ 'title': title, 'author': author, 'url': url })
       setBlogs(blogs.concat(newBlog))
       setNotification([`${title} by ${author} added`, 'success'])
       setTimeout(() => {
@@ -73,14 +72,14 @@ const App = () => {
 
   return (
     <div>
-      {user === null && 
-        <Login handleLogin={handleLogin} username={username} password={password} 
+      {user === null &&
+        <Login handleLogin={handleLogin} username={username} password={password}
           setUsername={setUsername} setPassword={setPassword} notification={notification}
         />
       }
       {user !== null &&
         <Blog blogs={blogs} user={user} title={title} author={author} url={url}
-          setBlogs={setBlogs} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl} 
+          setBlogs={setBlogs} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}
           handleLogout={handleLogout} handleNewBlog={handleNewBlog} notification={notification}
         />
       }
@@ -88,4 +87,4 @@ const App = () => {
   )
 }
 
-export default App;
+export default App

@@ -19,16 +19,10 @@ const getTokenFrom = (request, response, next) => {
   next()
 }
 
-const getUserFrom = (request, response, next) => {
-  const user = request.get('user')
-  request.user = user
-  next()
-}
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
 
 app.use(getTokenFrom)
-app.use(getUserFrom)
 app.use(cors())
 app.use(bodyParser.json())
 
