@@ -53,12 +53,12 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
   }
 
   return (
-    <div style={blogStyle}>
-      <span onClick={toggleVisibility}>
+    <div style={blogStyle} className='blog'>
+      <span onClick={toggleVisibility} className='toggle'>
         {blog.title} {' '}
       </span>
       {blog.author}
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='show'>
         {blog.url} <br />
         {blog.likes} likes <button onClick={handleLikes}>like</button> <br />
         added by {blog.user.username || user.username} <br />
