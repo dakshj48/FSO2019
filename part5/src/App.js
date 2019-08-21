@@ -52,44 +52,26 @@ const App = () => {
     }
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
-    try {
-      const newBlog = await blogService.create({ 'title': title, 'author': author, 'url': url })
-      setBlogs(blogs.concat(newBlog))
-      setNotification([`${title} by ${author} added`, 'success'])
-      setTimeout(() => {
-        setNotification([])
-      }, 5000)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    }
-    catch (error) {
-      setNotification(['Failed to save the blog', 'error'])
-      console.log('Failed to save the blog')
-      setTimeout(() => {
-        setNotification([])
-      }, 5000)
-    }
-  }
-
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
   }
 
+  const removeReset = (obj) => (({reset, ...others}) => ({...others}))(obj)
+
   return (
     <div>
       {user === null &&
-        <Login handleLogin={handleLogin} username={username} password={password}
-          setUsername={setUsername} setPassword={setPassword} notification={notification}
+        <Login handleLogin={handleLogin} setUsername={setUsername}
+          setPassword={setPassword} notification={notification}
+          removeReset={removeReset}
         />
       }
       {user !== null &&
         <Blog blogs={blogs} user={user} title={title} author={author} url={url}
           setBlogs={setBlogs} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}
-          handleLogout={handleLogout} handleNewBlog={handleNewBlog} notification={notification}
+          setNotification={setNotification} removeReset={removeReset}
+          handleLogout={handleLogout} notification={notification}
         />
       }
     </div>
