@@ -52,27 +52,6 @@ const App = () => {
     }
   }
 
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
-    try {
-      const newBlog = await blogService.create({ 'title': title, 'author': author, 'url': url })
-      setBlogs(blogs.concat(newBlog))
-      setNotification([`${title} by ${author} added`, 'success'])
-      setTimeout(() => {
-        setNotification([])
-      }, 5000)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    }
-    catch (error) {
-      setNotification(['Failed to save the blog', 'error'])
-      setTimeout(() => {
-        setNotification([])
-      }, 5000)
-    }
-  }
-
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
@@ -92,7 +71,7 @@ const App = () => {
         <Blog blogs={blogs} user={user} title={title} author={author} url={url}
           setBlogs={setBlogs} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}
           setNotification={setNotification} removeReset={removeReset}
-          handleLogout={handleLogout} handleNewBlog={handleNewBlog} notification={notification}
+          handleLogout={handleLogout} notification={notification}
         />
       }
     </div>
