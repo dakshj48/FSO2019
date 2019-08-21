@@ -19,7 +19,6 @@ const getTokenFrom = (request, response, next) => {
   next()
 }
 
-
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
 
 app.use(getTokenFrom)

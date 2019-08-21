@@ -12,26 +12,33 @@ blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
   try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!request.token || !decodedToken.id) {
+    if (!request.token) {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
 
-    let blog = {}
-    let user = await User.findById(decodedToken.id)
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+    if (!decodedToken) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const blog = new Blog(request.body)
+    const user = await User.findById(decodedToken.id)
+
     if (!body.title && !body.url) {
       return response.status(400).end()
     }
+
     if (!body.likes) {
-      blog = new Blog({ ...request.body, likes: 0, user: user._id })
+      blog.likes = 0
     }
-    else {
-      blog = new Blog({ ...request.body, user: user._id })
-    }
+
+    blog.user = user.id
     const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
+    user.blogs = user.blogs.concat(blog)
     await user.save()
-    response.json(savedBlog.toJSON())
+
+    response.status(201).json(savedBlog)
   } catch (exception) {
     return response.status(404).json(exception)
   }
@@ -39,16 +46,26 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   try {
+    if (!request.token) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!request.token || !decodedToken.id) {
+    if (!decodedToken) {
       return response.status(401).json({ error: 'token missing or invalid' })
     }
     const blog = await Blog.findById(request.params.id)
     if ( blog.user.toString() === decodedToken.id.toString() ) {
       await Blog.findByIdAndRemove(request.params.id)
+      const user = await User.findById(decodedToken.id)
+     // console.log(user.blogs)
+      const index = user.blogs.findIndex(obj => obj === request.params.id)
+      user.blogs.splice(index, 1)
+      await user.save()
       response.status(204).end()
     }
-    response.status(403).json({ error: 'blog can only be deleted by its own user' })
+    else {
+      response.status(403).json({ error: 'blog can only be deleted by its own user' })
+    }
   }
   catch (err) {
     return err
