@@ -67,7 +67,6 @@ const App = () => {
     }
     catch (error) {
       setNotification(['Failed to save the blog', 'error'])
-      console.log('Failed to save the blog')
       setTimeout(() => {
         setNotification([])
       }, 5000)
@@ -79,16 +78,20 @@ const App = () => {
     setUser(null)
   }
 
+  const removeReset = (obj) => (({reset, ...others}) => ({...others}))(obj)
+
   return (
     <div>
       {user === null &&
-        <Login handleLogin={handleLogin} username={username} password={password}
-          setUsername={setUsername} setPassword={setPassword} notification={notification}
+        <Login handleLogin={handleLogin} setUsername={setUsername}
+          setPassword={setPassword} notification={notification}
+          removeReset={removeReset}
         />
       }
       {user !== null &&
         <Blog blogs={blogs} user={user} title={title} author={author} url={url}
           setBlogs={setBlogs} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}
+          setNotification={setNotification} removeReset={removeReset}
           handleLogout={handleLogout} handleNewBlog={handleNewBlog} notification={notification}
         />
       }

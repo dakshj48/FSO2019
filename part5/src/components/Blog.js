@@ -6,7 +6,8 @@ import BlogPost from './BlogPost'
 
 const Blog = ({
   blogs, user, title, author, url, setBlogs, setTitle,
-  setAuthor, setUrl, handleLogout, handleNewBlog, notification
+  setAuthor, setUrl, handleLogout, setNotification, notification,
+  removeReset
 }) => (
   <div>
     <h1>
@@ -20,7 +21,8 @@ const Blog = ({
     <Togglable buttonLabel='new blog'>
       <BlogForm title={title} author={author} url={url}
         setTitle={setTitle} setAuthor={setAuthor}
-        setUrl={setUrl} handleNewBlog={handleNewBlog}
+        setUrl={setUrl} setNotification={setNotification}
+        blogs={blogs} setBlogs={setBlogs} removeReset={removeReset}
       />
     </Togglable>
     {blogs.map(blog =>
