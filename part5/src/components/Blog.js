@@ -22,7 +22,7 @@ const Blog = ({
       <BlogForm title={title} author={author} url={url}
         setTitle={setTitle} setAuthor={setAuthor}
         setUrl={setUrl} setNotification={setNotification}
-        blogs={blogs} setBlogs={setBlogs} removeReset={removeReset}
+        setBlogs={setBlogs} removeReset={removeReset}
       />
     </Togglable>
     {blogs.map(blog =>

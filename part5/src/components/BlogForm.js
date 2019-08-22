@@ -5,7 +5,7 @@ import blogService from '../services/blogs'
 const BlogForm = ({
   setNotification, title, author,
   url, setTitle, setAuthor, setUrl,
-  blogs, setBlogs, removeReset
+  setBlogs, removeReset
 }) => {
 
   const titleHook = useField('text')
@@ -19,8 +19,9 @@ const BlogForm = ({
   const handleNewBlog = async (event) => {
     event.preventDefault()
     try {
-      const newBlog = await blogService.create({ 'title': title, 'author': author, 'url': url })
-      setBlogs(blogs.concat(newBlog))
+      await blogService.create({ 'title': title, 'author': author, 'url': url })
+      const newBlogs = await blogService.getAll()
+      setBlogs(newBlogs)
       setNotification([`${title} by ${author} added`, 'success'])
       setTimeout(() => {
         setNotification([])
