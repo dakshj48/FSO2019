@@ -16,7 +16,7 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  const showIfUser = { display: (user.username === blog.user.username || user.id === blog.user) ? '' : 'none' }
+  const showIfUser = { display: (user.username === blog.user.username) ? '' : 'none' }
 
   const handleLikes = async (event) => {
     event.preventDefault()
@@ -61,7 +61,7 @@ const BlogPost = ({ blog, blogs, user, setBlogs }) => {
       <div style={showWhenVisible} className='show'>
         {blog.url} <br />
         {blog.likes} likes <button onClick={handleLikes}>like</button> <br />
-        added by {blog.user.username || user.username} <br />
+        added by {blog.user.username} <br />
         <div style={showIfUser}>
           <button onClick={handleRemove}>remove</button>
         </div>
