@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 
 const AnecdoteForm = (props) => {
   const handleAdd = (event) => {
-    const anec = event.target.anec.value
     event.preventDefault()
+    const anec = event.target.anec.value
     props.toAdd(anec)
     event.target.anec.value = ''
     props.addNotification(`added '${anec}'`)

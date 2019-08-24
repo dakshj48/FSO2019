@@ -4,8 +4,7 @@ import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
 import Filter from './components/Filter'
 
-const App = (props) => {
-  return (
+const App = () => (
     <div>
       <h2>Anecdotes</h2>
       <Notification />
@@ -13,7 +12,6 @@ const App = (props) => {
       <AnecdoteList />
       <AnecdoteForm />
     </div>
-  )
-}
+)
 
 export default App

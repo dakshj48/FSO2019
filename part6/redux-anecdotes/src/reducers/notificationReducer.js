@@ -20,11 +20,9 @@ export const remNotification = () => {
 const notificationReducer = (state = initialState, action) => {
   switch(action.type) {
     case 'SETNOT':
-      state.message = action.data.message
-      return state
+      return {...state, message: action.data.message}
     case 'REMNOT':
-      state.message = ''
-      return state
+      return {...state, message: ''}
     default:
       return state
   }

@@ -37,7 +37,6 @@ const anecdotesToShow = ({ anecdotes, filter }) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return {
     visibleAnecdotes: anecdotesToShow(state),
     notification: state.notification,
