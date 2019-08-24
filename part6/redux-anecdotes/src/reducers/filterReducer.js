@@ -1,13 +1,11 @@
 const initialState = ''
 
-export const toFilter = (term) => (
-  {
-    type: 'FILTER',
-    data: {
-      filter: term
-    }
+export const toFilter = (term) => ({
+  type: 'FILTER',
+  data: {
+    filter: term
   }
-)
+})
 
 const filterReducer = (state = initialState, action) => {
   switch(action.type) {

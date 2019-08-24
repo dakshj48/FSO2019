@@ -33,13 +33,11 @@ const anecdotesToShow = ({ anecdotes, filter }) => {
   return anecdotes.filter(obj => obj.content.includes(filter)).sort((a, b) => b.votes - a.votes)
 }
 
-const mapStateToProps = state => {
-  return {
-    visibleAnecdotes: anecdotesToShow(state),
-    notification: state.notification,
-    filter: state.filter
-  }
-}
+const mapStateToProps = state => ({
+  visibleAnecdotes: anecdotesToShow(state),
+  notification: state.notification,
+  filter: state.filter
+})
 
 const mapDispatchToProps = {
   toVote,
