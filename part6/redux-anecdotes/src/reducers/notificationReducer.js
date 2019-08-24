@@ -17,6 +17,15 @@ export const remNotification = () => {
   }
 }
 
+export const setNotification = (content, time) => {
+  return async dispatch => {
+    dispatch(addNotification(content))
+    setTimeout(() => {
+      dispatch(remNotification())
+    }, time)
+  }
+}
+
 const notificationReducer = (state = initialState, action) => {
   switch(action.type) {
     case 'SETNOT':
