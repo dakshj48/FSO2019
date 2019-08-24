@@ -2,18 +2,16 @@ const initialState = {
   message: ''
 }
 
-export const addNotification = content => (
-  {
-    type: 'SETNOT',
-    data: {
-      message: content
-    }
+export const addNotification = content => ({
+  type: 'SETNOT',
+  data: {
+    message: content
   }
-)
+})
 
-export const remNotification = () => (
-  { type: 'REMNOT' }
-)
+export const remNotification = () => ({ 
+  type: 'REMNOT'
+})
 
 export const setNotification = (content, time) => (
   async dispatch => {
