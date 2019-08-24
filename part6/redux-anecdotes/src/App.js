@@ -6,7 +6,7 @@ import Filter from './components/Filter'
 import { connect } from 'react-redux'
 import { initializeAnecdotes } from './reducers/anecdoteReducer'
 
-const App = (props) => {
+const App = props => {
   useEffect(() => {
     props.initializeAnecdotes()
   }, [props])

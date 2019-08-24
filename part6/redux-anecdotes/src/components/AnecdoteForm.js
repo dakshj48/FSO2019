@@ -3,8 +3,8 @@ import { toAdd } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
 
-const AnecdoteForm = (props) => {
-  const handleAdd = async (event) => {
+const AnecdoteForm = props => {
+  const handleAdd = event => {
     event.preventDefault()
     const anec = event.target.anec.value
     event.target.anec.value = ''

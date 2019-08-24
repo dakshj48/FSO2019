@@ -2,29 +2,27 @@ const initialState = {
   message: ''
 }
 
-export const addNotification = (content) => {
-  return {
+export const addNotification = content => (
+  {
     type: 'SETNOT',
     data: {
       message: content
     }
   }
-}
+)
 
-export const remNotification = () => {
-  return {
-    type: 'REMNOT'
-  }
-}
+export const remNotification = () => (
+  { type: 'REMNOT' }
+)
 
-export const setNotification = (content, time) => {
-  return async dispatch => {
+export const setNotification = (content, time) => (
+  async dispatch => {
     dispatch(addNotification(content))
     setTimeout(() => {
       dispatch(remNotification())
     }, time)
   }
-}
+)
 
 const notificationReducer = (state = initialState, action) => {
   switch(action.type) {
