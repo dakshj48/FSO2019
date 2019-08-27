@@ -3,12 +3,16 @@ import Notification from './Notifications'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 import BlogPost from './BlogPost'
+import { setUser } from '../reducers/appReducer'
 
-const Blog = ({
-  title, author, url, store, setTitle,
-  setAuthor, setUrl, handleLogout, removeReset
-}) => (
-  <div>
+const Blog = ({ store, removeReset }) => {
+
+  const handleLogout = () => {
+    window.localStorage.clear()
+    store.dispatch(setUser(null))
+  }
+
+  return (<div>
     <h1>
       blogs
     </h1>
@@ -18,15 +22,13 @@ const Blog = ({
       <button type='submit' onClick={() => handleLogout()}>logout</button>
     </p>
     <Togglable buttonLabel='new blog'>
-      <BlogForm title={title} author={author} url={url}
-        setTitle={setTitle} setAuthor={setAuthor}
-        setUrl={setUrl} store={store} removeReset={removeReset}
+      <BlogForm store={store} removeReset={removeReset}
       />
     </Togglable>
     {store.getState().app.blogs.map(blog =>
       <BlogPost key={blog.id} blog={blog} store={store} />
     )}
-  </div>
-)
+  </div>)
+}
 
 export default Blog

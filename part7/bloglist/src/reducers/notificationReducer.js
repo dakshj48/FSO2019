@@ -5,7 +5,7 @@ export const setNotification = message => (
   }
 )
 
-const notificationReducer = (state = '', action) => {
+const notificationReducer = (state = [], action) => {
   switch(action.type) {
     case 'SET_NOT':
       return action.data

@@ -5,8 +5,6 @@ import { setBlogs } from '../reducers/appReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const BlogForm = ({
-  title, author,
-  url, setTitle, setAuthor, setUrl,
   store, removeReset
 }) => {
 
@@ -14,17 +12,19 @@ const BlogForm = ({
   const authorHook = useField('text')
   const urlHook = useField('text')
 
-  setTitle(titleHook.value)
-  setAuthor(authorHook.value)
-  setUrl(urlHook.value)
-
   const handleNewBlog = async (event) => {
     event.preventDefault()
     try {
-      await blogService.create({ 'title': title, 'author': author, 'url': url })
+      await blogService.create({
+        'title': titleHook.value,
+        'author': authorHook.value,
+        'url': urlHook.value
+      })
       const newBlogs = await blogService.getAll()
       store.dispatch(setBlogs(newBlogs))
-      store.dispatch(setNotification([`${title} by ${author} added`, 'success']))
+      store.dispatch(setNotification(
+        [`${titleHook.value} by ${authorHook.value} added`, 'success']
+      ))
       setTimeout(() => {
         store.dispatch(setNotification([]))
       }, 5000)

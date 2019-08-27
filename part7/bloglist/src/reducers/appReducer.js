@@ -1,12 +1,6 @@
 const initialState = {
   blogs: [],
-  // notification: []
-  // username: ''
-  // password: ''
   user: null
-  // title: ''
-  // author: ''
-  // url: ''
 }
 
 export const setBlogs = blogs => (
