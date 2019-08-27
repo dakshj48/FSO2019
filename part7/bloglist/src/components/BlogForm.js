@@ -2,9 +2,10 @@ import React from 'react'
 import { useField } from '../hooks/index'
 import blogService from '../services/blogs'
 import { setBlogs } from '../reducers/appReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const BlogForm = ({
-  setNotification, title, author,
+  title, author,
   url, setTitle, setAuthor, setUrl,
   store, removeReset
 }) => {
@@ -23,18 +24,18 @@ const BlogForm = ({
       await blogService.create({ 'title': title, 'author': author, 'url': url })
       const newBlogs = await blogService.getAll()
       store.dispatch(setBlogs(newBlogs))
-      setNotification([`${title} by ${author} added`, 'success'])
+      store.dispatch(setNotification([`${title} by ${author} added`, 'success']))
       setTimeout(() => {
-        setNotification([])
+        store.dispatch(setNotification([]))
       }, 5000)
       titleHook.reset()
       authorHook.reset()
       urlHook.reset()
     }
     catch (error) {
-      setNotification(['Failed to save the blog', 'error'])
+      store.dispatch(setNotification(['Failed to save the blog', 'error']))
       setTimeout(() => {
-        setNotification([])
+        store.dispatch(setNotification([]))
       }, 5000)
     }
   }

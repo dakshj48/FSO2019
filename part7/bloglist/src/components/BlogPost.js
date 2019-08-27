@@ -10,8 +10,10 @@ const blogStyle = {
   marginBottom: 5
 }
 
-const BlogPost = ({ blog, blogs, user, store }) => {
+const BlogPost = ({ blog, store }) => {
   const [visible, setVisible] = useState(false)
+  const user = store.getState().app.user
+  const blogs = store.getState().app.blogs
 
   const toggleVisibility = () => setVisible(!visible)
 

@@ -5,28 +5,26 @@ import BlogForm from './BlogForm'
 import BlogPost from './BlogPost'
 
 const Blog = ({
-  blogs, user, title, author, url, store, setTitle,
-  setAuthor, setUrl, handleLogout, setNotification, notification,
-  removeReset
+  title, author, url, store, setTitle,
+  setAuthor, setUrl, handleLogout, removeReset
 }) => (
   <div>
     <h1>
       blogs
     </h1>
-    <Notification message={notification} />
+    <Notification message={store.getState().notification} />
     <p>
-      {user.username} logged in
+      {store.getState().app.user.username} logged in
       <button type='submit' onClick={() => handleLogout()}>logout</button>
     </p>
     <Togglable buttonLabel='new blog'>
       <BlogForm title={title} author={author} url={url}
         setTitle={setTitle} setAuthor={setAuthor}
-        setUrl={setUrl} setNotification={setNotification}
-        store={store} removeReset={removeReset}
+        setUrl={setUrl} store={store} removeReset={removeReset}
       />
     </Togglable>
-    {blogs.map(blog =>
-      <BlogPost key={blog.id} blog={blog} blogs={blogs} user={user} store={store} />
+    {store.getState().app.blogs.map(blog =>
+      <BlogPost key={blog.id} blog={blog} store={store} />
     )}
   </div>
 )

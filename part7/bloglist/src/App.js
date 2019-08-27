@@ -4,11 +4,12 @@ import Login from './components/Login'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setBlogs, setUser } from './reducers/appReducer'
+import { setNotification } from './reducers/notificationReducer'
 
 const App = (props) => {
   const store = props.store
   // const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState([])
+  // const [notification, setNotification] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   // const [user, setUser] = useState(null)
@@ -49,9 +50,9 @@ const App = (props) => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      setNotification(['wrong username or password', 'error'])
+      store.dispatch(setNotification(['wrong username or password', 'error']))
       setTimeout(() => {
-        setNotification([])
+        store.dispatch(setNotification([]))
       }, 5000)
     }
   }
@@ -65,17 +66,16 @@ const App = (props) => {
 
   return (
     <div>
-      {store.getState().user === null &&
+      {store.getState().app.user === null &&
         <Login handleLogin={handleLogin} setUsername={setUsername}
-          setPassword={setPassword} notification={notification}
+          setPassword={setPassword} notification={store.getState().notification}
           removeReset={removeReset}
         />
       }
-      {store.getState().user !== null &&
-        <Blog blogs={store.getState().blogs} user={store.getState().user} title={title} author={author} url={url}
-          store={props.store} setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}
-          setNotification={setNotification} removeReset={removeReset}
-          handleLogout={handleLogout} notification={notification}
+      {store.getState().app.user !== null &&
+        <Blog title={title} author={author} url={url} store={props.store}
+          setTitle={setTitle} setAuthor={setAuthor} setUrl={setUrl}
+          removeReset={removeReset} handleLogout={handleLogout}
         />
       }
     </div>
