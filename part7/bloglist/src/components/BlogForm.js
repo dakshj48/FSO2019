@@ -4,9 +4,7 @@ import blogService from '../services/blogs'
 import { setBlogs } from '../reducers/appReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({
-  store, removeReset
-}) => {
+const BlogForm = ({ store, removeReset }) => {
 
   const titleHook = useField('text')
   const authorHook = useField('text')
