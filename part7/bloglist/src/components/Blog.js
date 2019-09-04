@@ -1,26 +1,66 @@
 import React from 'react'
-import Togglable from './Togglable'
-import BlogForm from './BlogForm'
-import BlogPost from './BlogPost'
-import Notification from './Notifications'
+import blogService from '../services/blogs'
+import { setBlogs } from '../reducers/appReducer'
+import { withRouter } from 'react-router-dom'
 
-const Blog = ({ store, removeReset }) => {
+const BlogNoHistory = (props) => {
+  const store = props.store
+  const user = store.getState().app.user
+  const blogs = store.getState().app.blogs
+  const blog = props.blog
+
+  const showIfUser = { display: (user.username === blog.user.username) ? '' : 'none' }
+
+  const handleLikes = async (event) => {
+    event.preventDefault()
+    try {
+      const newBlog = { ...blog, likes: blog.likes+1 }
+      await blogService.update(blog.id, newBlog)
+      let newBlogs = [...blogs]
+      const index = newBlogs.findIndex(obj => obj.id === blog.id)
+      newBlogs[index].likes++
+      newBlogs.sort((a, b) => b.likes - a.likes)
+      store.dispatch(setBlogs(newBlogs))
+    }
+    catch (error) {
+      console.log(error)
+      console.log('Error while liking')
+    }
+  }
+
+  const handleRemove = async (event) => {
+    event.preventDefault()
+    if(window.confirm(`remove blog ${blog.title} by ${blog.author}?`)) {
+      try {
+        props.history.push('/')
+        await blogService.deleteBlog(blog.id)
+        let newBlogs = [...blogs]
+        const index = newBlogs.findIndex(obj => obj.id === blog.id)
+        newBlogs.splice(index, 1)
+        store.dispatch(setBlogs(newBlogs))
+      }
+      catch (error) {
+        console.log(error)
+        console.log('Failed to remove the blog')
+      }
+    }
+  }
 
   return (
     <div>
       <h1>
-        blogs
+        <b>{blog.title}</b>
       </h1>
-      <Notification message={store.getState().notification} />
-      <Togglable buttonLabel='new blog'>
-        <BlogForm store={store} removeReset={removeReset}
-        />
-      </Togglable>
-      {store.getState().app.blogs.map(blog =>
-        <BlogPost key={blog.id} blog={blog} store={store} />
-      )}
+      {blog.url} <br />
+      {blog.likes} likes <button onClick={handleLikes}>like</button> <br />
+      added by {blog.user.username} <br />
+      <div style={showIfUser}>
+        <button onClick={handleRemove}>remove</button>
+      </div>
     </div>
   )
 }
+
+const Blog = withRouter(BlogNoHistory)
 
 export default Blog

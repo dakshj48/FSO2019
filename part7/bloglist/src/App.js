@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import Login from './components/Login'
 import Users from './components/Users'
 import blogService from './services/blogs'
@@ -12,6 +12,7 @@ import {
 import User from './components/User'
 import { useState } from 'react'
 import userService from './services/users'
+import Blog from './components/Blog'
 
 const App = (props) => {
   const store = props.store
@@ -49,6 +50,10 @@ const App = (props) => {
     return users.find(user => user.id === id)
   }
 
+  const blogById = (id) => {
+    return store.getState().app.blogs.find(blog => blog.id === id)
+  }
+
   const handleLogout = () => {
     window.localStorage.clear()
     store.dispatch(setUser(null))
@@ -71,13 +76,16 @@ const App = (props) => {
               </em>
             </div>
             <Route exact path='/' render={() =>
-              <Blog store={props.store} removeReset={removeReset} />
+              <Blogs store={props.store} removeReset={removeReset} />
             }/>
             <Route exact path="/users" render={() =>
               <Users users={users} setUsers={setUsers} store={props.store} removeReset={removeReset} />}
             />
             <Route exact path="/users/:id" render={({ match }) =>
-              <User user={userById(match.params.id)}/>
+              <User user={userById(match.params.id)} />
+            }/>
+            <Route exact path="/blogs/:id" render={({ match }) =>
+              <Blog store={props.store} blog={blogById(match.params.id)} />
             }/>
           </Router>
         )}
