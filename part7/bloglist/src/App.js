@@ -71,7 +71,7 @@ const App = (props) => {
               <Link style={padding} to='/'>blogs</Link>
               <Link style={padding} to='/users'>users</Link>
               <em>
-                {store.getState().app.user.name} logged in
+                {store.getState().app.user.name} logged in {' '}
                 <button type='submit' onClick={() => handleLogout()}>logout</button>
               </em>
             </div>
@@ -85,7 +85,7 @@ const App = (props) => {
               <User user={userById(match.params.id)} />
             }/>
             <Route exact path="/blogs/:id" render={({ match }) =>
-              <Blog store={props.store} blog={blogById(match.params.id)} />
+              <Blog store={props.store} blog={blogById(match.params.id)} removeReset={removeReset} />
             }/>
           </Router>
         )}
