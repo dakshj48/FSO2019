@@ -1,11 +1,23 @@
 import React, { useEffect } from 'react'
 import Blog from './components/Blog'
 import Login from './components/Login'
+import Users from './components/Users'
 import blogService from './services/blogs'
 import { setBlogs, setUser } from './reducers/appReducer'
+import { Container } from 'semantic-ui-react'
+import {
+  BrowserRouter as Router,
+  Route, Link
+} from 'react-router-dom'
+import User from './components/User'
+import { useState } from 'react'
+import userService from './services/users'
 
 const App = (props) => {
   const store = props.store
+  const [users, setUsers] = useState([])
+
+  const padding = { padding: 5 }
 
   useEffect(() => {
     blogService
@@ -24,17 +36,53 @@ const App = (props) => {
     }
   }, [store])
 
-  const removeReset = (obj) => (({reset, ...others}) => ({...others}))(obj)
+  useEffect(() => {
+    userService
+      .getUsers().then(resp =>
+        setUsers(resp)
+      )
+  }, [setUsers])
+
+  const removeReset = obj => (({ reset, ...others }) => ({ ...others }))(obj)
+
+  const userById = (id) => {
+    return users.find(user => user.id === id)
+  }
+
+  const handleLogout = () => {
+    window.localStorage.clear()
+    store.dispatch(setUser(null))
+  }
 
   return (
-    <div>
-      {store.getState().app.user === null &&
-        <Login store={store} removeReset={removeReset} />
-      }
-      {store.getState().app.user !== null &&
-        <Blog store={props.store} removeReset={removeReset} />
-      }
-    </div>
+    <Container>
+      <div>
+        {store.getState().app.user === null &&
+          <Login store={store} removeReset={removeReset} />
+        }
+        {store.getState().app.user !== null && (
+          <Router>
+            <div>
+              <Link style={padding} to='/'>blogs</Link>
+              <Link style={padding} to='/users'>users</Link>
+              <em>
+                {store.getState().app.user.name} logged in
+                <button type='submit' onClick={() => handleLogout()}>logout</button>
+              </em>
+            </div>
+            <Route exact path='/' render={() =>
+              <Blog store={props.store} removeReset={removeReset} />
+            }/>
+            <Route exact path="/users" render={() =>
+              <Users users={users} setUsers={setUsers} store={props.store} removeReset={removeReset} />}
+            />
+            <Route exact path="/users/:id" render={({ match }) =>
+              <User user={userById(match.params.id)}/>
+            }/>
+          </Router>
+        )}
+      </div>
+    </Container>
   )
 }
 
