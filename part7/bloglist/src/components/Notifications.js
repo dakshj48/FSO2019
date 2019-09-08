@@ -1,15 +1,13 @@
 import React from 'react'
-import './style.css'
+import { Message } from 'semantic-ui-react'
 
 const Notification = ({ message }) => {
-  if (message === null) {
+  if (message.length === 0) {
     return null
   }
-  return(
-    <div className={message[1]}>
-      {message[0]}
-    </div>
-  )
+  else if(message[1] === 'success')
+    return <Message content={message[0]} success />
+  return <Message content={message[0]} error />
 }
 
 export default Notification

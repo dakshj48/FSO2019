@@ -3,6 +3,7 @@ import { useField } from '../hooks/index'
 import blogService from '../services/blogs'
 import { setBlogs } from '../reducers/appReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { Form, Button, Input, Icon } from 'semantic-ui-react'
 
 const BlogForm = ({ store, removeReset }) => {
 
@@ -43,21 +44,29 @@ const BlogForm = ({ store, removeReset }) => {
       <h1>
         create new
       </h1>
-      <form onSubmit={handleNewBlog}>
-        <div>
-          title:
-          <input {...removeReset(titleHook)} />
-        </div>
-        <div>
-          author:
-          <input {...removeReset(authorHook)} />
-        </div>
-        <div>
-          url:
-          <input {...removeReset(urlHook)} />
-        </div>
-        <button type='submit'>create</button>
-      </form>
+      <Form onSubmit={handleNewBlog}>
+        <Form.Field>
+          <label>
+            title:
+          </label>
+          <Input {...removeReset(titleHook)} />
+        </Form.Field>
+        <Form.Field>
+          <label>author:</label>
+          <Input {...removeReset(authorHook)} />
+        </Form.Field>
+        <Form.Field>
+          <label>url:</label>
+          <Input {...removeReset(urlHook)} />
+        </Form.Field>
+        <Button animated type='submit' >
+          <Button.Content visible>create</Button.Content>
+          <Button.Content hidden>
+            <Icon name='add' />
+          </Button.Content>
+        </Button>
+      </Form>
+      <br />
     </div>
   )
 }

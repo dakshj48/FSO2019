@@ -5,6 +5,7 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 import { setUser } from '../reducers/appReducer'
 import { setNotification } from '../reducers/notificationReducer'
+import { Form, Button, Input, Icon } from 'semantic-ui-react'
 
 const Login = ({ store, removeReset }) => {
   const usernameHook = useField('text')
@@ -36,17 +37,22 @@ const Login = ({ store, removeReset }) => {
         log in to application
       </h1>
       <Notification message={store.getState().notification} />
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input {...removeReset(usernameHook)} />
-        </div>
-        <div>
-          password
-          <input {...removeReset(passwordHook)} />
-        </div>
-        <button type='submit'>login</button>
-      </form>
+      <Form onSubmit={handleLogin}>
+        <Form.Field>
+          <label>username</label>
+          <Input {...removeReset(usernameHook)} />
+        </Form.Field>
+        <Form.Field>
+          <label>password</label>
+          <Input {...removeReset(passwordHook)} />
+        </Form.Field>
+        <Button primary animated>
+          <Button.Content visible>login</Button.Content>
+          <Button.Content hidden>
+            <Icon name='arrow right' />
+          </Button.Content>
+        </Button>
+      </Form>
     </div>
   )
 }

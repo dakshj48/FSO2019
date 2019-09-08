@@ -16,6 +16,7 @@ const Blogs = ({ store, removeReset }) => {
         <BlogForm store={store} removeReset={removeReset}
         />
       </Togglable>
+      <br />
       {store.getState().app.blogs.map(blog =>
         <BlogPost key={blog.id} blog={blog} store={store} />
       )}

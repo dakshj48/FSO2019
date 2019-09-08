@@ -2,7 +2,7 @@ import React from 'react'
 import { Table } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
-const Users = ({ users, setUsers}) => {
+const Users = ({ users }) => {
 
   return(
     <div>

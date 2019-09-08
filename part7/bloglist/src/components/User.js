@@ -1,4 +1,5 @@
 import React from 'react'
+import { List } from 'semantic-ui-react'
 
 const User = ({ user }) => {
   if(user === undefined)
@@ -9,9 +10,9 @@ const User = ({ user }) => {
         {user.name}
       </h1>
       <b>added blogs</b> <br />
-      <ul style={{ listStyleType: 'circle' }}>
-        {user.blogs.map(blog => <li key={blog.id}>{blog.title}</li>)}
-      </ul>
+      <List bulleted>
+        {user.blogs.map(blog => <List.Item key={blog.id}>{blog.title}</List.Item>)}
+      </List>
     </div>
   )
 }
