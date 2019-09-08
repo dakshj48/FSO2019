@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import { setBlogs } from '../reducers/appReducer'
 import { withRouter } from 'react-router-dom'
 import { useField } from '../hooks/index'
+import { Form, Button, Input, Icon, List, Confirm } from 'semantic-ui-react'
 
 const BlogNoHistory = (props) => {
   const store = props.store
@@ -10,6 +11,7 @@ const BlogNoHistory = (props) => {
   const blogs = store.getState().app.blogs
   const blog = props.blog
   const commentHook = useField('text')
+  const [show, setShow] = useState(false)
 
   const showIfUser = { display: (user.username === blog.user.username) ? '' : 'none' }
 
@@ -32,19 +34,18 @@ const BlogNoHistory = (props) => {
 
   const handleRemove = async (event) => {
     event.preventDefault()
-    if(window.confirm(`remove blog ${blog.title} by ${blog.author}?`)) {
-      try {
-        props.history.push('/')
-        await blogService.deleteBlog(blog.id)
-        let newBlogs = [...blogs]
-        const index = newBlogs.findIndex(obj => obj.id === blog.id)
-        newBlogs.splice(index, 1)
-        store.dispatch(setBlogs(newBlogs))
-      }
-      catch (error) {
-        console.log(error)
-        console.log('Failed to remove the blog')
-      }
+    try {
+      setShow(false)
+      props.history.push('/')
+      await blogService.deleteBlog(blog.id)
+      let newBlogs = [...blogs]
+      const index = newBlogs.findIndex(obj => obj.id === blog.id)
+      newBlogs.splice(index, 1)
+      store.dispatch(setBlogs(newBlogs))
+    }
+    catch (error) {
+      console.log(error)
+      console.log('Failed to remove the blog')
     }
   }
 
@@ -64,27 +65,52 @@ const BlogNoHistory = (props) => {
     }
   }
 
+  const capDecide = (count) => count === 1 ? 'like' : 'likes'
+
   return (
     <div>
       <h1>
-        <b>{blog.title}</b>
+        {blog.title} by {blog.author}
       </h1>
       <a href={blog.url}>{blog.url}</a> <br />
-      {blog.likes} likes <button onClick={handleLikes}>like</button> <br />
+      {blog.likes} {capDecide(blog.likes)} {' '}
+      <Button animated onClick={handleLikes}>
+        <Button.Content visible>like</Button.Content>
+        <Button.Content hidden>
+          <Icon name='like' />
+        </Button.Content>
+      </Button>
+      <br />
       added by {blog.user.name} <br />
       <div style={showIfUser}>
-        <button onClick={handleRemove}>remove</button>
+        <Button animated type='submit' onClick={() => setShow(true)}>
+          <Button.Content visible>remove</Button.Content>
+          <Button.Content hidden>
+            <Icon name='delete'/>
+          </Button.Content>
+        </Button>
+        <Confirm
+          open={show}
+          onConfirm={handleRemove}
+          onCancel={() => setShow(false)}
+          content={`remove blog ${blog.title} by ${blog.author}?`}
+        />
       </div>
       <br />
       <div>
         <b>comments</b>
-        <form onSubmit={handleComment}>
-          <input {...props.removeReset(commentHook)}/>
-          <button type='submit'>add comment</button>
-        </form>
-        <ul style={{ listStyleType: 'circle' }}>
-          {blog.comments.map(comment => <li key={keyGen()}>{comment}</li>)}
-        </ul>
+        <Form onSubmit={handleComment}>
+          <Input {...props.removeReset(commentHook)}/> {' '}
+          <Button animated type='submit'>
+            <Button.Content visible>add comment</Button.Content>
+            <Button.Content hidden>
+              <Icon name='add' />
+            </Button.Content>
+          </Button>
+        </Form>
+        <List bulleted>
+          {blog.comments.map(comment => <List.Item key={keyGen()}>{comment}</List.Item>)}
+        </List>
       </div>
     </div>
   )

@@ -13,12 +13,11 @@ import User from './components/User'
 import { useState } from 'react'
 import userService from './services/users'
 import Blog from './components/Blog'
+import { Menu, Button, Icon } from 'semantic-ui-react'
 
 const App = (props) => {
   const store = props.store
   const [users, setUsers] = useState([])
-
-  const padding = { padding: 5 }
 
   useEffect(() => {
     blogService
@@ -67,14 +66,25 @@ const App = (props) => {
         }
         {store.getState().app.user !== null && (
           <Router>
-            <div>
-              <Link style={padding} to='/'>blogs</Link>
-              <Link style={padding} to='/users'>users</Link>
-              <em>
-                {store.getState().app.user.name} logged in {' '}
-                <button type='submit' onClick={() => handleLogout()}>logout</button>
-              </em>
-            </div>
+            <Menu inverted>
+              <Menu.Item link>
+                <Link to='/'>blogs</Link>
+              </Menu.Item>
+              <Menu.Item link>
+                <Link to='/users'>users</Link>
+              </Menu.Item>
+              <Menu.Item>
+                <em>
+                  {store.getState().app.user.name} logged in {' '}
+                  <Button animated size='tiny' type='submit' onClick={() => handleLogout()}>
+                    <Button.Content visible>logout</Button.Content>
+                    <Button.Content hidden>
+                      <Icon name='sign-out' />
+                    </Button.Content>
+                  </Button>
+                </em>
+              </Menu.Item>
+            </Menu>
             <Route exact path='/' render={() =>
               <Blogs store={props.store} removeReset={removeReset} />
             }/>
