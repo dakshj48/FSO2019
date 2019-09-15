@@ -19,6 +19,11 @@ const getTokenFrom = (request, response, next) => {
   next()
 }
 
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true })
 
 app.use(getTokenFrom)

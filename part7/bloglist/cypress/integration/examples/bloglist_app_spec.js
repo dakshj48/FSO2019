@@ -1,0 +1,80 @@
+describe('Blog ', function() {
+  beforeEach(function() {
+    cy.request('POST', 'http://localhost:3003/api/testing/reset')
+    const user = {
+      name: 'Daksh',
+      username: 'test',
+      password: 'jain'
+    }
+    cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.visit('http://localhost:3000')
+  })
+
+  it('front page can be opened', function() {
+    cy.visit('http://localhost:3000')
+    cy.contains('log in')
+  })
+
+  it('user can login', function () {
+    cy.contains('log in')
+      .click()
+    cy.get('input:first')
+      .type('test')
+    cy.get('input:last')
+      .type('jain')
+    cy.contains('login')
+      .click()
+    cy.contains('Daksh logged in')
+  })
+
+  it('user can make a blog', function () {
+    cy.contains('log in')
+      .click()
+    cy.get('input:first')
+      .type('test')
+    cy.get('input:last')
+      .type('jain')
+    cy.contains('login')
+      .click()
+    cy.contains('Daksh logged in')
+    cy.contains('new blog')
+      .click()
+    cy.get('input:first')
+      .type('test title')
+    cy.get('input:last')
+      .type('test url')
+    cy.get('form').contains('create').click()
+    cy.contains('test title')
+  })
+
+  it('user can like and delete a blog', function () {
+    cy.contains('log in')
+      .click()
+    cy.get('input:first')
+      .type('test')
+    cy.get('input:last')
+      .type('jain')
+    cy.contains('login')
+      .click()
+    cy.contains('Daksh logged in')
+    cy.contains('new blog')
+      .click()
+    cy.get('input:first')
+      .type('test title')
+    cy.get('input:last')
+      .type('test url')
+    cy.get('form').contains('create')
+      .click()
+    cy.get('.blog').contains('test title')
+      .click()
+    cy.contains('like')
+      .click()
+    cy.contains('1 like')
+    cy.contains('remove')
+      .click()
+    cy.contains('OK')
+      .click()
+    cy.get('.blog')
+      .should('not.exist')
+  })
+})
