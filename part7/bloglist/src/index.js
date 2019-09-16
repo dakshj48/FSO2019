@@ -5,7 +5,7 @@ import { createStore, combineReducers } from 'redux'
 import appReducer from './reducers/appReducer'
 import notificationReducer from './reducers/notificationReducer'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom'
 
 const reducer = combineReducers({
   app: appReducer,
