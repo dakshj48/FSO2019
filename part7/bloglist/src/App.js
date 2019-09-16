@@ -7,7 +7,7 @@ import { setBlogs, setUser } from './reducers/appReducer'
 import { Container } from 'semantic-ui-react'
 import {
   BrowserRouter as Router,
-  Route, Link
+  Route, Link, withRouter
 } from 'react-router-dom'
 import User from './components/User'
 import { useState } from 'react'
@@ -15,7 +15,7 @@ import userService from './services/users'
 import Blog from './components/Blog'
 import { Menu, Button, Icon } from 'semantic-ui-react'
 
-const App = (props) => {
+const AppNoHistory = (props) => {
   const store = props.store
   const [users, setUsers] = useState([])
 
@@ -54,6 +54,7 @@ const App = (props) => {
   }
 
   const handleLogout = () => {
+    props.history.push('/')
     window.localStorage.clear()
     store.dispatch(setUser(null))
   }
@@ -103,5 +104,7 @@ const App = (props) => {
     </Container>
   )
 }
+
+const App = withRouter(AppNoHistory)
 
 export default App

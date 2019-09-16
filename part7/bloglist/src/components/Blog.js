@@ -54,10 +54,11 @@ const BlogNoHistory = (props) => {
   const handleComment = async (event) => {
     event.preventDefault()
     try {
-      const newBlog = await blogService.addComment(blog.id, commentHook.value)
-      let newBlogs = [...blogs]
-      const index = newBlogs.findIndex(obj => obj.id === blog.id)
-      newBlogs[index] = newBlog
+      if(!commentHook.value) {
+        return
+      }
+      await blogService.addComment(blog.id, commentHook.value)
+      const newBlogs = await blogService.getAll()
       store.dispatch(setBlogs(newBlogs))
       commentHook.reset()
     } catch (error) {

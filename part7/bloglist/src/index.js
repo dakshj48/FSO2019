@@ -5,6 +5,7 @@ import { createStore, combineReducers } from 'redux'
 import appReducer from './reducers/appReducer'
 import notificationReducer from './reducers/notificationReducer'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const reducer = combineReducers({
   app: appReducer,
@@ -14,7 +15,11 @@ const reducer = combineReducers({
 const store = createStore(reducer, composeWithDevTools())
 
 const renderApp = () => {
-  ReactDOM.render(<App store={store}/>, document.getElementById('root'))
+  ReactDOM.render(
+    <Router>
+      <App store={store}/>
+    </Router>,
+    document.getElementById('root'))
 }
 
 renderApp()
