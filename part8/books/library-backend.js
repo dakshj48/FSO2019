@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server')
+const uuid = require('uuid/v1')
 
 let authors = [
   {
@@ -87,12 +88,91 @@ let books = [
 const typeDefs = gql`
   type Query {
     hello: String!
+    bookCount: Int!
+    authorCount: Int!
+    allBooks(author: String, genre: String): [Book!]!
+    allAuthors: [Author!]!
+  }
+
+  type Book {
+    title: String!
+    author: String!
+    published: Int!
+    genres: [String!]!
+  }
+
+  type Author {
+    name: String!
+    born: Int
+    bookCount: Int!
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String
+      published: Int!
+      genres: [String!]!
+    ): Book!
+
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `
 
 const resolvers = {
   Query: {
-    hello: () => { return "world" }
+    hello: () => { return "world" },
+    
+    bookCount: () => { return books.length },
+    
+    authorCount: () => { return authors.length },
+    
+    allBooks: (root, args) => {
+      if (args.author != null && args.genre == null)
+        return books.filter(book => book.author === args.author)
+      else if (args.author == null && args.genre != null)
+        return books.filter(book => book.genres.includes(args.genre))
+      else if (args.author != null && args.genre != null)
+        return books.filter(book => book.genres.includes(args.genre)).filter(book => book.author === args.author)
+      return books
+    },
+
+    allAuthors: () => {
+      toRet = authors
+      toRet.forEach(author => {
+        let count = 0
+        books.forEach(book => {
+          if (book.author === author.name) {
+            count++
+          }
+        })
+        author.bookCount = count
+      })
+      return toRet
+    }
+  },
+
+  Mutation: {
+    addBook: (root, args) => {
+      const book = { ...args, id: uuid() }
+      if (!authors.some(author => author.name === args.author))
+        authors = authors.concat({ name: args.author, id: uuid() })
+      books = books.concat(book)
+      return { title: book.title, author: book.author }
+    },
+
+    editAuthor: (root, args) => {
+      for (let i = 0; i < authors.length; i++) {
+        if (authors[i].name === args.name) {
+          authors[i].born = args.setBornTo
+          return authors[i]
+        }
+      }
+      return null
+    }
   }
 }
 
