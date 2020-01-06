@@ -161,6 +161,11 @@ const resolvers = {
   Mutation: {
     addBook: async (root, args) => {
       let book = null
+      if (args.genres.length === 0) {
+        throw new UserInputError("No genre specified", {
+          invalidArgs: args
+        })
+      }
       try {
         let author = await Author.findOneAndUpdate({ name: args.author }, { $inc: { "bookCount": 1 } })
         if (!author) {
@@ -178,6 +183,10 @@ const resolvers = {
     },
 
     editAuthor: async (root, args) => {
+      if (!args.name)
+        throw new UserInputError("Invalid input", {
+          invalidArgs: args
+        })
       let author = null
       try {
         author = await Author.findOneAndUpdate({ name: args.name },{ $set: { "born": args.setBornTo }}, { returnOriginal : false })
