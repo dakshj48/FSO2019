@@ -5,6 +5,7 @@ import NewBook from './components/NewBook'
 import { gql } from 'apollo-boost'
 import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import LoginForm from './components/LoginForm'
+import Recommendations from './components/Recommendations'
 
 const ALL_AUTHORS = gql`
   {
@@ -40,7 +41,9 @@ const ADD_BOOK = gql`
   mutation addBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {
     addBook(title: $title, author: $author, published: $published, genres: $genres) {
       title
-      author
+      author {
+        name
+      }
     }
   }
 `
@@ -52,17 +55,26 @@ const LOGIN = gql`
   }
 `
 
+const ME = gql`
+  {
+    me {
+      favoriteGenre
+    }
+  }
+`
+
 const App = () => {
   const [page, setPage] = useState('authors')
+  const [token, setToken] = useState(null)
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
+  const me = useQuery(ME)
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
   const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
   })
-  const [token, setToken] = useState(null)
   const [login] = useMutation(LOGIN)
   const client = useApolloClient()
 
@@ -80,6 +92,7 @@ const App = () => {
         <button onClick={() => setPage('books')}>books</button>
         { token && <button onClick={() => setPage('add')}>add book</button>}
         { token === null && <button onClick={() => setPage('loginForm')}>login</button> }
+        { token && <button onClick={() => setPage('recommendations')}>recommend</button>}
         { token && <button onClick={() => logout()}>logout</button>}
       </div>
 
@@ -99,11 +112,19 @@ const App = () => {
         addBook={addBook}
       />
 
-      {token === null && <LoginForm 
+      <LoginForm 
         show={page === 'loginForm'}
         setToken={(token) => setToken(token)}
         setPage={(page) => setPage(page)}
-        login={login}/>}
+        login={login}
+      />
+
+      <Recommendations
+        show={page === 'recommendations'}
+        result={books}
+        me={me}
+      />
+
     </div>
   )
 }
