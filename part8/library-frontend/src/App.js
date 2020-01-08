@@ -24,6 +24,7 @@ const ALL_BOOKS = gql`
         name
       }
       published
+      genres
     }
   }
 `
@@ -71,8 +72,6 @@ const App = () => {
     localStorage.clear()
     client.resetStore()
   }
-
-  console.log(token)
 
   return (
     <div>
