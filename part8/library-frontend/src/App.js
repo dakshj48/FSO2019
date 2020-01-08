@@ -3,7 +3,8 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import { gql } from 'apollo-boost'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import LoginForm from './components/LoginForm'
 
 const ALL_AUTHORS = gql`
   {
@@ -42,6 +43,13 @@ const ADD_BOOK = gql`
     }
   }
 `
+const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -53,13 +61,27 @@ const App = () => {
   const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
   })
+  const [token, setToken] = useState(null)
+  const [login] = useMutation(LOGIN)
+  const client = useApolloClient()
+
+  const logout = () => {
+    setToken(null)
+    setPage('authors')
+    localStorage.clear()
+    client.resetStore()
+  }
+
+  console.log(token)
 
   return (
     <div>
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
-        <button onClick={() => setPage('add')}>add book</button>
+        { token && <button onClick={() => setPage('add')}>add book</button>}
+        { token === null && <button onClick={() => setPage('loginForm')}>login</button> }
+        { token && <button onClick={() => logout()}>logout</button>}
       </div>
 
       <Authors
@@ -78,6 +100,11 @@ const App = () => {
         addBook={addBook}
       />
 
+      {token === null && <LoginForm 
+        show={page === 'loginForm'}
+        setToken={(token) => setToken(token)}
+        setPage={(page) => setPage(page)}
+        login={login}/>}
     </div>
   )
 }
