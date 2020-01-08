@@ -17,19 +17,6 @@ const ALL_AUTHORS = gql`
   }
 `
 
-// const ALL_BOOKS = gql`
-//   {
-//     allBooks {
-//       title
-//       author {
-//         name
-//       }
-//       published
-//       genres
-//     }
-//   }
-// `
-
 const ALL_BOOKS = gql`
   query allBooks($author: String, $genre: String) {
     allBooks(author: $author, genre: $genre) {
