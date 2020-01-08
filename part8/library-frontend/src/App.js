@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
+import { gql } from 'apollo-boost'
+import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { gql } from 'apollo-boost'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
 
@@ -18,8 +18,8 @@ const ALL_AUTHORS = gql`
 `
 
 const ALL_BOOKS = gql`
-  {
-    allBooks {
+  query allBooks($author: String, $genre: String) {
+    allBooks(author: $author, genre: $genre) {
       title
       author {
         name
@@ -29,6 +29,7 @@ const ALL_BOOKS = gql`
     }
   }
 `
+
 const EDIT_AUTHOR = gql`
   mutation editAuthor($name: String!, $setBornTo: Int!) {
     editAuthor(name: $name, setBornTo: $setBornTo) {
@@ -66,8 +67,11 @@ const ME = gql`
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
+  const [genre, setGenreGraph] = useState(null)
   const authors = useQuery(ALL_AUTHORS)
-  const books = useQuery(ALL_BOOKS)
+  const books = useQuery(ALL_BOOKS, {
+    variables: { genre: genre }
+  })
   const me = useQuery(ME)
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
@@ -105,6 +109,7 @@ const App = () => {
       <Books
         show={page === 'books'}
         result={books}
+        setGenreGraph={(genre) => setGenreGraph(genre)}
       />
 
       <NewBook

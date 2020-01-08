@@ -58,7 +58,8 @@ const Books = (props) => {
       </table>
       <div>
         {
-          [...genres].map(genre => <button key={genre} onClick={() => setGenre(genre)}>{genre}</button>)
+          // [...genres].map(genre => <button key={genre} onClick={() => setGenre(genre)}>{genre}</button>) // Books by genre with react
+          [...genres].map(genre => <button key={genre} onClick={() => props.setGenreGraph(genre)}>{genre}</button>) // Books by genre using GraphQL
         }
       </div>
     </div>
