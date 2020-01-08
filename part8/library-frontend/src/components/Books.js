@@ -11,7 +11,7 @@ const Books = (props) => {
     return <div>loading...</div>
   }
 
-  let books = props.result.data.allBooks
+  const books = props.result.data.allBooks
   let genres = new Set()
 
   books.forEach(book => {
