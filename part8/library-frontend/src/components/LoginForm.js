@@ -15,10 +15,6 @@ const LoginForm = (props) => {
       variables: { username, password }
     })
 
-    // if (props.result.loading) {
-    //   return <div>loading...</div>
-    // }
-
     if(result) {
       const token = result.data.login.value
       props.setToken(token)
