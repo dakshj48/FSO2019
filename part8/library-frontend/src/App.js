@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { gql } from 'apollo-boost'
-import { useQuery, useMutation, useApolloClient } from '@apollo/react-hooks'
+import { useQuery, useMutation, useApolloClient, useSubscription } from '@apollo/react-hooks'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
@@ -18,8 +18,8 @@ const ALL_AUTHORS = gql`
 `
 
 const ALL_BOOKS = gql`
-  query allBooks($author: String, $genre: String) {
-    allBooks(author: $author, genre: $genre) {
+  query allBooks {
+    allBooks {
       title
       author {
         name
@@ -45,6 +45,8 @@ const ADD_BOOK = gql`
       author {
         name
       }
+      published
+      genres
     }
   }
 `
@@ -64,7 +66,21 @@ const ME = gql`
   }
 `
 
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+      author {
+        name
+      }
+      published
+      genres
+    }
+  }
+`
+
 const App = () => {
+  const client = useApolloClient()
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
   const [genre, setGenreGraph] = useState(null)
@@ -76,11 +92,48 @@ const App = () => {
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
+
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) =>
+      set.map(p => p.title).includes(object.title)
+
+    const includedInAuth = (set, object) =>
+      set.map(p => p.name).includes(object.author.name)
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    const dataInStoreAuth = client.readQuery({ query: ALL_AUTHORS })
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      dataInStore.allBooks.push(addedBook)
+      if(!includedInAuth(dataInStoreAuth.allAuthors, addedBook)) {
+        dataInStoreAuth.allAuthors.push({ ...addedBook.author, bookCount: 1, born: null })
+        client.writeQuery({
+          query: ALL_AUTHORS,
+          data: dataInStoreAuth
+        })
+      }
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: dataInStore
+      })
+    }
+  }
+  
   const [addBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_BOOKS }]
+    update: (store, response) => {
+      updateCacheWith(response.data.addBook)
+    },
   })
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      const addedBook = subscriptionData.data.bookAdded
+      window.alert(`New book: ${addedBook.title} added`)
+      updateCacheWith(addedBook)
+    }
+  })
+
+
   const [login] = useMutation(LOGIN)
-  const client = useApolloClient()
 
   const logout = () => {
     setToken(null)

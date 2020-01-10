@@ -136,9 +136,11 @@ const resolvers = {
         })
       }
 
-      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+      pubsub.publish('BOOK_ADDED', { 
+        bookAdded: { title: book['title'], author: { name: args.author }, published: book['published'], genres: book['genres'] } 
+      })
 
-      return { title: book['title'], author: { name: args.author } }
+      return { title: book['title'], author: { name: args.author }, published: book['published'], genres: book['genres'] }
     },
 
     editAuthor: async (root, args, { currentUser }) => {
