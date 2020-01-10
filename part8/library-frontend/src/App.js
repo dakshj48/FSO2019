@@ -18,8 +18,8 @@ const ALL_AUTHORS = gql`
 `
 
 const ALL_BOOKS = gql`
-  query allBooks {
-    allBooks {
+  query allBooks($author: String, $genre: String) {
+    allBooks(author: $author, genre: $genre) {
       title
       author {
         name
@@ -97,20 +97,9 @@ const App = () => {
     const includedIn = (set, object) =>
       set.map(p => p.title).includes(object.title)
 
-    const includedInAuth = (set, object) =>
-      set.map(p => p.name).includes(object.author.name)
-
-    const dataInStore = client.readQuery({ query: ALL_BOOKS })
-    const dataInStoreAuth = client.readQuery({ query: ALL_AUTHORS })
+    const dataInStore = client.readQuery({ query: ALL_BOOKS, variables: { genre } })
     if (!includedIn(dataInStore.allBooks, addedBook)) {
       dataInStore.allBooks.push(addedBook)
-      if(!includedInAuth(dataInStoreAuth.allAuthors, addedBook)) {
-        dataInStoreAuth.allAuthors.push({ ...addedBook.author, bookCount: 1, born: null })
-        client.writeQuery({
-          query: ALL_AUTHORS,
-          data: dataInStoreAuth
-        })
-      }
       client.writeQuery({
         query: ALL_BOOKS,
         data: dataInStore
@@ -122,6 +111,7 @@ const App = () => {
     update: (store, response) => {
       updateCacheWith(response.data.addBook)
     },
+    refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
   useSubscription(BOOK_ADDED, {
