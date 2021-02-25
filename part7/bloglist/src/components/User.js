@@ -6,10 +6,10 @@ const User = ({ user }) => {
     return null
   return (
     <div>
-      <h1>
-        {user.name}
-      </h1>
-      <b>added blogs</b> <br />
+      <h2>
+        User {user.name}
+      </h2>
+      <b style={{margin: 0}}>blogs added:</b> <br />
       <List bulleted>
         {user.blogs.map(blog => <List.Item key={blog.id}>{blog.title}</List.Item>)}
       </List>

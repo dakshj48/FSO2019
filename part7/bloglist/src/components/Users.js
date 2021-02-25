@@ -7,7 +7,7 @@ const Users = ({ users }) => {
   return(
     <div>
       <h1>Users</h1>
-      <Table striped celled>
+      <Table striped celled unstackable>
         <Table.Body>
           <Table.Row>
             <Table.Cell>
