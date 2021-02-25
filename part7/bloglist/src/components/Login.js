@@ -34,8 +34,11 @@ const Login = ({ store, removeReset }) => {
   return (
     <div>
       <h1>
-        log in to application
+        Bloglist
       </h1>
+      <h2>
+        log in
+      </h2>
       <Notification message={store.getState().notification} />
       <Form onSubmit={handleLogin}>
         <Form.Field>

@@ -60,48 +60,65 @@ const AppNoHistory = (props) => {
   }
 
   return (
-    <Container>
+    // <Container style={{width: 'auto'}}>
       <div>
         {store.getState().app.user === null &&
-          <Login store={store} removeReset={removeReset} />
+          <Container style={{width: '90%', padding: '10px'}}>
+            <Login store={store} removeReset={removeReset} />
+          </Container>
         }
         {store.getState().app.user !== null && (
           <Router>
-            <Menu inverted>
+            <Menu inverted tabular style={{width: 'auto'}}>
               <Menu.Item link>
-                <Link to='/'>blogs</Link>
+                <Link to='/'>
+                  <h5>
+                    Blogs
+                  </h5>
+                </Link>
               </Menu.Item>
               <Menu.Item link>
-                <Link to='/users'>users</Link>
+                <Link to='/users'>
+                  <h5>
+                    Users
+                  </h5>
+                </Link>
               </Menu.Item>
-              <Menu.Item>
-                <em>
-                  {store.getState().app.user.name} logged in {' '}
-                  <Button animated size='tiny' type='submit' onClick={() => handleLogout()}>
+              {/* <Menu.Item position='right'>
+                {store.getState().app.user.name} logged in {' '}
+              </Menu.Item> */}
+              <Menu.Item position='right' disabled >
+                {/* <em> */}
+                  {/* <em> 
+                    {store.getState().app.user.name} logged in {' '} 
+                  </em> */}
+                  <Button animated size='tiny' fluid type='submit' onClick={() => handleLogout()}>
                     <Button.Content visible>logout</Button.Content>
                     <Button.Content hidden>
                       <Icon name='sign-out' />
                     </Button.Content>
                   </Button>
-                </em>
+                {/* </em> */}
               </Menu.Item>
             </Menu>
+            <Container style={{width: '95%'}}>
             <Route exact path='/' render={() =>
               <Blogs store={props.store} removeReset={removeReset} />
-            }/>
+            } />
             <Route exact path="/users" render={() =>
               <Users users={users} setUsers={setUsers} store={props.store} removeReset={removeReset} />}
             />
             <Route exact path="/users/:id" render={({ match }) =>
               <User user={userById(match.params.id)} />
-            }/>
+            } />
             <Route exact path="/blogs/:id" render={({ match }) =>
               <Blog store={props.store} blog={blogById(match.params.id)} removeReset={removeReset} />
-            }/>
+            } />
+            </Container>
           </Router>
         )}
       </div>
-    </Container>
+    // </Container>
   )
 }
 

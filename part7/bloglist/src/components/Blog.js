@@ -73,7 +73,7 @@ const BlogNoHistory = (props) => {
       <h1>
         {blog.title} by {blog.author}
       </h1>
-      <a href={blog.url}>{blog.url}</a> <br />
+      <a href={blog.url} target='_blank' rel='noopener noreferrer'>{blog.url}</a> <br />
       {blog.likes} {capDecide(blog.likes)} {' '}
       <Button animated onClick={handleLikes}>
         <Button.Content visible>like</Button.Content>

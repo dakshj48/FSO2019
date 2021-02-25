@@ -42,7 +42,7 @@ const BlogForm = ({ store, removeReset }) => {
   return (
     <div>
       <h1>
-        create new
+        add new
       </h1>
       <Form onSubmit={handleNewBlog}>
         <Form.Field>
@@ -60,7 +60,7 @@ const BlogForm = ({ store, removeReset }) => {
           <Input {...removeReset(urlHook)} />
         </Form.Field>
         <Button animated type='submit' >
-          <Button.Content visible>create</Button.Content>
+          <Button.Content visible>add</Button.Content>
           <Button.Content hidden>
             <Icon name='add' />
           </Button.Content>

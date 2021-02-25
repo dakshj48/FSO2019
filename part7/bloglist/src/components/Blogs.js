@@ -8,11 +8,14 @@ const Blogs = ({ store, removeReset }) => {
 
   return (
     <div>
-      <h1>
-        blogs
+      <h5 style={{margin: 0}}>
+        Welcome {store.getState().app.user.name}
+      </h5>
+      <h1 style={{marginTop: 0}}>
+        Blogs
       </h1>
       <Notification message={store.getState().notification} />
-      <Togglable buttonLabel='new blog'>
+      <Togglable buttonLabel='add blog'>
         <BlogForm store={store} removeReset={removeReset}
         />
       </Togglable>
